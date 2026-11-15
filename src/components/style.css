@@ -3839,3 +3839,222 @@ body {
   border-color: #F6B17A !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
 }
+
+
+/* =======================================================
+   FORGOT PASSWORD & RESET PASSWORD (LIGHT & DARK THEMES)
+   ======================================================= */
+.forgot-password-card {
+  max-width: 460px;
+}
+
+.forgot-lock-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-accent-light);
+  color: var(--color-accent-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.label-with-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text-action-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-accent-primary);
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.15s ease;
+}
+
+.text-action-link:hover:not(:disabled) {
+  color: var(--color-periwinkle-hover);
+}
+
+.text-action-link:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+.reset-step-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.step-pill {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-bg-subtle);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.step-pill.active {
+  background-color: var(--color-accent-light);
+  color: var(--color-accent-primary);
+  border-color: var(--color-border-focus);
+}
+
+.step-arrow {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.otp-input {
+  letter-spacing: 8px;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.dev-otp-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background-color: #fef3c7;
+  border: 1px solid #fde68a;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  color: #92400e;
+  margin-bottom: 16px;
+}
+
+.dev-otp-badge {
+  background-color: #d97706;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+.info-message {
+  background-color: var(--color-accent-light);
+  border: 1px solid var(--color-border-focus);
+  color: var(--color-accent-primary);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  margin-bottom: 16px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.reset-success-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 12px 0 6px 0;
+  gap: 16px;
+}
+
+.success-check-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-description {
+  font-size: 0.94rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.secondary-outline-btn {
+  background: transparent;
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-secondary);
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.secondary-outline-btn:hover {
+  background-color: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+  border-color: var(--color-text-muted);
+}
+
+/* Dark mode specific for Forgot Password */
+[data-theme="dark"] .forgot-lock-icon {
+  background-color: #2D3250;
+  color: #F6B17A;
+}
+
+[data-theme="dark"] .step-pill {
+  background-color: #2D3250;
+  color: #7077A1;
+  border-color: #424769;
+}
+
+[data-theme="dark"] .step-pill.active {
+  background-color: rgba(246, 177, 122, 0.2);
+  color: #F6B17A;
+  border-color: #F6B17A;
+}
+
+[data-theme="dark"] .text-action-link {
+  color: #F6B17A;
+}
+
+[data-theme="dark"] .text-action-link:hover:not(:disabled) {
+  color: #f9c49a;
+}
+
+[data-theme="dark"] .dev-otp-banner {
+  background-color: rgba(246, 177, 122, 0.15);
+  border-color: rgba(246, 177, 122, 0.35);
+  color: #F6B17A;
+}
+
+[data-theme="dark"] .dev-otp-badge {
+  background-color: #F6B17A;
+  color: #2D3250;
+}
+
+[data-theme="dark"] .info-message {
+  background-color: rgba(112, 119, 161, 0.2);
+  border-color: #7077A1;
+  color: #e4edf8;
+}
+
+[data-theme="dark"] .secondary-outline-btn {
+  border-color: #7077A1;
+  color: #e4edf8;
+}
+
+[data-theme="dark"] .secondary-outline-btn:hover {
+  background-color: #2D3250;
+  border-color: #F6B17A;
+}
