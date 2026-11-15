@@ -4058,3 +4058,275 @@ body {
   background-color: #2D3250;
   border-color: #F6B17A;
 }
+
+
+/* =======================================================
+   STEP 1: SUBJECT REPORT ATTENDANCE FILTERS & BADGES
+   ======================================================= */
+.report-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px 20px;
+  margin-top: 14px;
+}
+
+.report-filter-section {
+  background-color: var(--color-bg-subtle);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.report-filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filter-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.filter-pills-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  background-color: #ffffff;
+  color: var(--color-text-secondary);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-pill-btn:hover {
+  border-color: var(--color-border-focus);
+  color: var(--color-text-primary);
+  transform: translateY(-1px);
+}
+
+.filter-pill-btn.active {
+  background-color: var(--color-accent-primary);
+  color: #ffffff;
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 3px 10px rgba(74, 111, 165, 0.25);
+}
+
+.filter-pill-btn .pill-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  font-size: 0.76rem;
+  font-weight: 800;
+  background-color: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+}
+
+.filter-pill-btn.active .pill-count {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* Category Specific Active Tints */
+.filter-pill-btn.pill-danger.active {
+  background-color: #dc2626 !important;
+  border-color: #dc2626 !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 10px rgba(220, 38, 38, 0.3) !important;
+}
+
+.filter-pill-btn.pill-warning.active {
+  background-color: #d97706 !important;
+  border-color: #d97706 !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 10px rgba(217, 119, 6, 0.3) !important;
+}
+
+.filter-pill-btn.pill-success.active {
+  background-color: #16a34a !important;
+  border-color: #16a34a !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 10px rgba(22, 163, 74, 0.3) !important;
+}
+
+.filter-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--color-border-subtle);
+  font-size: 0.84rem;
+  color: var(--color-text-secondary);
+}
+
+.reset-filter-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-accent-primary);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.reset-filter-link:hover {
+  color: var(--color-periwinkle-hover);
+}
+
+/* Attendance Status Badges in Table */
+.attendance-status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+.attendance-status-badge.status-danger {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #991b1b;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.attendance-status-badge.status-warning {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #92400e;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.attendance-status-badge.status-success {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #166534;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+/* Dark Mode Overrides for Filters & Badges */
+[data-theme="dark"] .report-filter-section {
+  background-color: #353A5A !important;
+  border-color: #4C5270 !important;
+}
+
+[data-theme="dark"] .filter-pill-btn {
+  background-color: #2D3250 !important;
+  color: #FFFFFF !important;
+  border-color: #565D87 !important;
+}
+
+[data-theme="dark"] .filter-pill-btn .pill-count {
+  background-color: #424769 !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .filter-pill-btn.active {
+  background-color: #F6B17A !important;
+  color: #2D3250 !important;
+  border-color: #F6B17A !important;
+}
+
+[data-theme="dark"] .filter-pill-btn.active .pill-count {
+  background-color: rgba(45, 50, 80, 0.3) !important;
+  color: #2D3250 !important;
+}
+
+[data-theme="dark"] .reset-filter-link {
+  color: #F6B17A !important;
+}
+
+[data-theme="dark"] .attendance-status-badge.status-danger {
+  background-color: rgba(239, 68, 68, 0.25) !important;
+  color: #fca5a5 !important;
+  border-color: rgba(239, 68, 68, 0.5) !important;
+}
+
+[data-theme="dark"] .attendance-status-badge.status-warning {
+  background-color: rgba(245, 158, 11, 0.25) !important;
+  color: #fcd34d !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+}
+
+[data-theme="dark"] .attendance-status-badge.status-success {
+  background-color: rgba(34, 197, 94, 0.25) !important;
+  color: #86efac !important;
+  border-color: rgba(34, 197, 94, 0.5) !important;
+}
+
+
+/* =======================================================
+   STEP 2: DOWNLOAD PDF REPORT STYLES
+   ======================================================= */
+.filter-left-col {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filter-right-col {
+  display: flex;
+  align-items: center;
+}
+
+.download-pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-accent-primary);
+  color: #ffffff;
+  border: 1px solid var(--color-accent-primary);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(74, 111, 165, 0.2);
+}
+
+.download-pdf-btn:hover:not(:disabled) {
+  background-color: var(--color-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 111, 165, 0.35);
+}
+
+.download-pdf-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+[data-theme="dark"] .download-pdf-btn {
+  background-color: #F6B17A !important;
+  color: #2D3250 !important;
+  border-color: #F6B17A !important;
+}
+
+[data-theme="dark"] .download-pdf-btn:hover:not(:disabled) {
+  background-color: #f9c49a !important;
+}
