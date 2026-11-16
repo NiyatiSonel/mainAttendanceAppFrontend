@@ -1,24 +1,11 @@
 import React, { useState } from 'react';
 import API from '../api';
 import ThemeToggle from './ThemeToggle';
-import ForgotPassword from './ForgotPassword';
 
 export default function AdminLogin({ onLoginSuccess, onBack, theme, onToggleTheme }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
-
-  if (showForgotPassword) {
-    return (
-      <ForgotPassword
-        role="admin"
-        onBack={() => setShowForgotPassword(false)}
-        theme={theme}
-        onToggleTheme={onToggleTheme}
-      />
-    );
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,6 +16,9 @@ export default function AdminLogin({ onLoginSuccess, onBack, theme, onToggleThem
 
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', 'admin');
+      if (res.data.admin) {
+        localStorage.setItem('adminInfo', JSON.stringify(res.data.admin));
+      }
 
       if (onLoginSuccess) {
         onLoginSuccess();
@@ -82,16 +72,7 @@ export default function AdminLogin({ onLoginSuccess, onBack, theme, onToggleThem
             </div>
 
             <div className="form-group">
-              <div className="label-with-action">
-                <label htmlFor="admin-password">Password</label>
-                <button
-                  type="button"
-                  className="text-action-link"
-                  onClick={() => setShowForgotPassword(true)}
-                >
-                  Forgot Password?
-                </button>
-              </div>
+              <label htmlFor="admin-password">Password</label>
               <input
                 id="admin-password"
                 type="password"

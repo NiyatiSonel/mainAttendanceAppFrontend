@@ -1,24 +1,11 @@
 import React, { useState } from 'react';
 import API from '../api';
 import ThemeToggle from './ThemeToggle';
-import ForgotPassword from './ForgotPassword';
 
 export default function TeacherLogin({ onLoginSuccess, onBack, theme, onToggleTheme }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
-
-  if (showForgotPassword) {
-    return (
-      <ForgotPassword
-        role="teacher"
-        onBack={() => setShowForgotPassword(false)}
-        theme={theme}
-        onToggleTheme={onToggleTheme}
-      />
-    );
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -82,16 +69,7 @@ export default function TeacherLogin({ onLoginSuccess, onBack, theme, onToggleTh
             </div>
 
             <div className="form-group">
-              <div className="label-with-action">
-                <label htmlFor="teacher-password">Password</label>
-                <button
-                  type="button"
-                  className="text-action-link"
-                  onClick={() => setShowForgotPassword(true)}
-                >
-                  Forgot Password?
-                </button>
-              </div>
+              <label htmlFor="teacher-password">Password</label>
               <input
                 id="teacher-password"
                 type="password"

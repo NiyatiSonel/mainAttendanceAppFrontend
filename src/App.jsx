@@ -36,6 +36,7 @@ export default function App() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    localStorage.removeItem('adminInfo');
     setCurrentView('select');
   };
 
@@ -43,6 +44,7 @@ export default function App() {
     // Clear any previous token when moving to login
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    localStorage.removeItem('adminInfo');
     setCurrentView(role === 'admin' ? 'admin_login' : 'teacher_login');
   };
 

@@ -14,6 +14,28 @@ export default function AdminDashboard({ onLogout, theme, onToggleTheme }) {
   const [admins, setAdmins] = useState([]);
   const [message, setMessage] = useState('');
 
+  // Superadmin identity and password management modal
+  const [isSuperAdmin, setIsSuperAdmin] = useState(() => {
+    try {
+      const saved = localStorage.getItem('adminInfo');
+      if (saved) {
+        return Boolean(JSON.parse(saved).isSuper);
+      }
+    } catch (e) {}
+    return false;
+  });
+
+  const [passwordModal, setPasswordModal] = useState({
+    open: false,
+    type: 'teacher', // 'teacher' | 'admin'
+    id: null,
+    name: '',
+    newPassword: '',
+    confirmPassword: '',
+    loading: false,
+    error: ''
+  });
+
   // Form states
   // Form states (removed biometric_template from newStudent)
   const [newTeacher, setNewTeacher] = useState({ name: '', email: '', password: '', confirmPassword: '' });
@@ -35,6 +57,11 @@ export default function AdminDashboard({ onLogout, theme, onToggleTheme }) {
       API.get('/admin/students').then(res => setStudents(res.data)).catch(console.error);
       API.get('/admin/devices').then(res => setDevices(res.data)).catch(console.error);
       API.get('/admin/enrollments').then(res => setEnrollments(res.data)).catch(console.error);
+      API.get('/admin/me').then(res => {
+        if (res.data && res.data.isSuper !== undefined) {
+          setIsSuperAdmin(Boolean(res.data.isSuper));
+        }
+      }).catch(() => {});
       const admRes = await API.get('/admin/admins');
       setAdmins(admRes.data);
     } catch (err) {
@@ -47,6 +74,61 @@ export default function AdminDashboard({ onLogout, theme, onToggleTheme }) {
   useEffect(() => {
     loadData();
   }, []);   
+
+  const handleOpenPasswordModal = (type, id, name) => {
+    setPasswordModal({
+      open: true,
+      type,
+      id,
+      name,
+      newPassword: '',
+      confirmPassword: '',
+      loading: false,
+      error: ''
+    });
+  };
+
+  const handleClosePasswordModal = () => {
+    setPasswordModal({
+      open: false,
+      type: 'teacher',
+      id: null,
+      name: '',
+      newPassword: '',
+      confirmPassword: '',
+      loading: false,
+      error: ''
+    });
+  };
+
+  const handleSavePassword = async (e) => {
+    e.preventDefault();
+    if (!passwordModal.newPassword || passwordModal.newPassword.length < 6) {
+      setPasswordModal(prev => ({ ...prev, error: 'Password must be at least 6 characters long.' }));
+      return;
+    }
+    if (passwordModal.newPassword !== passwordModal.confirmPassword) {
+      setPasswordModal(prev => ({ ...prev, error: 'Passwords do not match.' }));
+      return;
+    }
+
+    try {
+      setPasswordModal(prev => ({ ...prev, loading: true, error: '' }));
+      const endpoint = passwordModal.type === 'teacher'
+        ? `/admin/teachers/${passwordModal.id}/password`
+        : `/admin/admins/${passwordModal.id}/password`;
+
+      const res = await API.put(endpoint, { new_password: passwordModal.newPassword });
+      alert(res.data.message || 'Password updated successfully!');
+      handleClosePasswordModal();
+    } catch (err) {
+      setPasswordModal(prev => ({
+        ...prev,
+        loading: false,
+        error: err.response?.data?.error || 'Failed to update password'
+      }));
+    }
+  };
 
   // 3. Trigger enrollment function
   const handleTriggerEnrollment = async (studentId, rollNo) => {
@@ -273,7 +355,23 @@ export default function AdminDashboard({ onLogout, theme, onToggleTheme }) {
       <div className="admin-header-area">
         <div className="admin-title-row">
           <div>
-            <h2>Admin Operations Dashboard</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+              <h2 style={{ margin: 0 }}>Admin Operations Dashboard</h2>
+              {isSuperAdmin && (
+                <span style={{
+                  background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+                  color: '#ffffff',
+                  padding: '3px 10px',
+                  borderRadius: '12px',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase'
+                }}>
+                  Super Admin
+                </span>
+              )}
+            </div>
             <p className="admin-subtitle">Manage campus directory, biometric enrollment, subjects, and hardware nodes.</p>
           </div>
         </div>
@@ -388,7 +486,28 @@ export default function AdminDashboard({ onLogout, theme, onToggleTheme }) {
                         <td>{t.name}</td>
                         <td>{t.email}</td>
                         <td>
-                          <button className="delete-btn" onClick={() => handleDeleteTeacher(t.id)}>Delete</button>
+                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                            {isSuperAdmin && (
+                              <button
+                                type="button"
+                                style={{
+                                  background: 'linear-gradient(135deg, #4f46e5, #6366f1)',
+                                  color: '#ffffff',
+                                  border: 'none',
+                                  borderRadius: '6px',
+                                  padding: '6px 12px',
+                                  fontSize: '0.8rem',
+                                  cursor: 'pointer',
+                                  fontWeight: 500,
+                                  whiteSpace: 'nowrap'
+                                }}
+                                onClick={() => handleOpenPasswordModal('teacher', t.id, t.name)}
+                              >
+                                Change Password
+                              </button>
+                            )}
+                            <button className="delete-btn" onClick={() => handleDeleteTeacher(t.id)}>Delete</button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -814,14 +933,33 @@ export default function AdminDashboard({ onLogout, theme, onToggleTheme }) {
                             </span>
 
                           ) : (
-
-                            <button
-                              onClick={() => handleDeleteAdmin(adm.id)}
-                              className="delete-btn"
-                            >
-                              Delete
-                            </button>
-
+                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                              {isSuperAdmin && (
+                                <button
+                                  type="button"
+                                  style={{
+                                    background: 'linear-gradient(135deg, #4f46e5, #6366f1)',
+                                    color: '#ffffff',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    padding: '5px 10px',
+                                    fontSize: '0.8rem',
+                                    cursor: 'pointer',
+                                    fontWeight: 500,
+                                    whiteSpace: 'nowrap'
+                                  }}
+                                  onClick={() => handleOpenPasswordModal('admin', adm.id, adm.name)}
+                                >
+                                  Change Password
+                                </button>
+                              )}
+                              <button
+                                onClick={() => handleDeleteAdmin(adm.id)}
+                                className="delete-btn"
+                              >
+                                Delete
+                              </button>
+                            </div>
                           )}
                         </td>
 
@@ -846,6 +984,145 @@ export default function AdminDashboard({ onLogout, theme, onToggleTheme }) {
           )}
         </main>
       </div>
+
+      {/* Password Reset Modal for Superadmin */}
+      {passwordModal.open && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.65)',
+          backdropFilter: 'blur(4px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999,
+          padding: '1rem'
+        }}>
+          <div style={{
+            background: 'var(--card-bg, #ffffff)',
+            color: 'var(--text-color, #1e293b)',
+            borderRadius: '16px',
+            padding: '2rem',
+            maxWidth: '440px',
+            width: '100%',
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.1)',
+            border: '1px solid var(--border-color, rgba(255, 255, 255, 0.1))'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600 }}>
+                Direct Password Reset
+              </h3>
+              <button
+                type="button"
+                onClick={handleClosePasswordModal}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  fontSize: '1.5rem',
+                  cursor: 'pointer',
+                  color: 'inherit',
+                  lineHeight: 1
+                }}
+              >
+                &times;
+              </button>
+            </div>
+
+            <p style={{ fontSize: '0.9rem', opacity: 0.85, marginBottom: '1.25rem' }}>
+              Directly set a new password for <strong>{passwordModal.name}</strong> ({passwordModal.type === 'teacher' ? 'Teacher' : 'Administrator'}).
+            </p>
+
+            {passwordModal.error && (
+              <div style={{
+                background: 'rgba(239, 68, 68, 0.15)',
+                color: '#ef4444',
+                padding: '0.6rem 0.8rem',
+                borderRadius: '8px',
+                fontSize: '0.85rem',
+                marginBottom: '1rem'
+              }}>
+                {passwordModal.error}
+              </div>
+            )}
+
+            <form onSubmit={handleSavePassword}>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 500, marginBottom: '0.35rem' }}>
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Min 6 characters"
+                  value={passwordModal.newPassword}
+                  onChange={(e) => setPasswordModal({ ...passwordModal, newPassword: e.target.value, error: '' })}
+                  required
+                  minLength={6}
+                  style={{
+                    width: '100%',
+                    padding: '0.65rem 0.8rem',
+                    borderRadius: '8px',
+                    border: '1px solid var(--border-color, #cbd5e1)',
+                    background: 'var(--input-bg, #f8fafc)',
+                    color: 'inherit',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 500, marginBottom: '0.35rem' }}>
+                  Confirm New Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Re-enter new password"
+                  value={passwordModal.confirmPassword}
+                  onChange={(e) => setPasswordModal({ ...passwordModal, confirmPassword: e.target.value, error: '' })}
+                  required
+                  minLength={6}
+                  style={{
+                    width: '100%',
+                    padding: '0.65rem 0.8rem',
+                    borderRadius: '8px',
+                    border: '1px solid var(--border-color, #cbd5e1)',
+                    background: 'var(--input-bg, #f8fafc)',
+                    color: 'inherit',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+                <button
+                  type="button"
+                  onClick={handleClosePasswordModal}
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid var(--border-color, #94a3b8)',
+                    color: 'inherit',
+                    padding: '0.55rem 1rem',
+                    borderRadius: '6px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="portal-btn"
+                  disabled={passwordModal.loading}
+                  style={{ padding: '0.55rem 1.25rem' }}
+                >
+                  {passwordModal.loading ? 'Updating...' : 'Update Password'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
