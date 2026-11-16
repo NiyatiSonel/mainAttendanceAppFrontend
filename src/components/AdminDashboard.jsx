@@ -44,7 +44,7 @@ export default function AdminDashboard({ onLogout, theme, onToggleTheme }) {
   const [newStudent, setNewStudent] = useState({ roll_no: '', name: '' });
   const [enrollTarget, setEnrollTarget] = useState({ studentId: '', template: '' });
   const [newEnrollment, setNewEnrollment] = useState({ stu_id: '', subject_id: '' });
-  const [newDevice, setNewDevice] = useState({ mac_address: '', auth_token: '' });
+  const [newDevice, setNewDevice] = useState({ mac_address: '' });
   const [newAdmin, setNewAdmin] = useState({ name: '', email: '', password: '', confirmPassword: '' });
 
   // 1. loadData definition MUST be inside the component
@@ -260,8 +260,8 @@ export default function AdminDashboard({ onLogout, theme, onToggleTheme }) {
   const handleAddDevice = async (e) => {
     e.preventDefault();
     try {
-      await API.post('/admin/devices', newDevice);
-      setNewDevice({ mac_address: '', auth_token: '' });
+      await API.post('/admin/devices', { mac_address: newDevice.mac_address });
+      setNewDevice({ mac_address: '' });
       setMessage('Device registered');
       loadData();
     } catch (err) {
@@ -799,11 +799,6 @@ export default function AdminDashboard({ onLogout, theme, onToggleTheme }) {
                   onChange={(e) => setNewDevice({ ...newDevice, mac_address: e.target.value })}
                   required
                 />
-                <input
-                  placeholder="Auth Token"
-                  value={newDevice.auth_token}
-                  onChange={(e) => setNewDevice({ ...newDevice, auth_token: e.target.value })}
-                />
                 <button type="submit" className="portal-btn">Register Device</button>
               </form>
 
@@ -814,7 +809,6 @@ export default function AdminDashboard({ onLogout, theme, onToggleTheme }) {
                     <tr>
                       <th>device_ID</th>
                       <th>MAC Address</th>
-                      <th>Auth Token</th>
                       <th>Status</th>
                     </tr>
                   </thead>
@@ -823,7 +817,6 @@ export default function AdminDashboard({ onLogout, theme, onToggleTheme }) {
                       <tr key={d.id}>
                         <td>{d.id}</td>
                         <td>{d.mac_address}</td>
-                        <td>{d.auth_token}</td>
                         <td>{d.status === 1 ? 'Active' : 'Inactive'}</td>
                       </tr>
                     ))}
