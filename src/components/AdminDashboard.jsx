@@ -772,7 +772,7 @@ export default function AdminDashboard({ onLogout, theme, onToggleTheme }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {enrollments.map((enr) => (
+                    {[...enrollments].sort((a, b) => (Number(a.id) || 0) - (Number(b.id) || 0)).map((enr) => (
                       <tr key={enr.id}>
                         <td>{enr.id}</td>
                         <td>{enr.student_name}</td>
