@@ -84,6 +84,15 @@ export default function StudentReport({ subjectId, studentId, onBack }) {
     history
   } = report;
 
+  const sortedHistory = [...(history || [])].sort((a, b) => {
+    const timeA = new Date(a.start_time || a.date).getTime();
+    const timeB = new Date(b.start_time || b.date).getTime();
+    if (!isNaN(timeA) && !isNaN(timeB)) {
+      return timeA - timeB;
+    }
+    return (a.session_id || 0) - (b.session_id || 0);
+  });
+
 
   return (
     <div className="student-report-section">
@@ -189,7 +198,7 @@ export default function StudentReport({ subjectId, studentId, onBack }) {
       </h4>
 
 
-      {history.length > 0 ? (
+      {sortedHistory.length > 0 ? (
 
         <div className="student-session-table-wrapper">
 
@@ -198,7 +207,7 @@ export default function StudentReport({ subjectId, studentId, onBack }) {
             <thead>
 
               <tr>
-                <th>Session ID</th>
+                <th>Session #</th>
                 <th>Date / Start Time</th>
                 <th>Status</th>
                 <th>Marked Time</th>
@@ -209,12 +218,12 @@ export default function StudentReport({ subjectId, studentId, onBack }) {
 
             <tbody>
 
-              {history.map((h) => (
+              {sortedHistory.map((h, index) => (
 
-                <tr key={h.session_id}>
+                <tr key={h.session_id || index}>
 
                   <td>
-                    {h.session_id}
+                    {index + 1}
                   </td>
 
                   <td>
