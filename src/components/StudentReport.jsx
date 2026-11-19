@@ -1,6 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import API from '../api';
 
+const formatDateTime = (val) => {
+  if (!val || val === 'N/A' || val === '-') return '-';
+  const d = new Date(val);
+  return isNaN(d.getTime())
+    ? val
+    : d.toLocaleString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+};
+
 export default function StudentReport({ subjectId, studentId, onBack }) {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -203,7 +218,7 @@ export default function StudentReport({ subjectId, studentId, onBack }) {
                   </td>
 
                   <td>
-                    {h.start_time}
+                    {formatDateTime(h.start_time || h.date)}
                   </td>
 
                   <td>
@@ -219,7 +234,7 @@ export default function StudentReport({ subjectId, studentId, onBack }) {
                   </td>
 
                   <td>
-                    {h.marked_at || '-'}
+                    {formatDateTime(h.marked_at || h.marked_time)}
                   </td>
 
                 </tr>
